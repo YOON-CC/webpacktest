@@ -29,7 +29,18 @@ module.exports = (env, argv) => {
           test: /\.(png|jpe?g|gif)$/i,
           loader: 'file-loader',
           options: {
-              name: 'imgs/[name].[ext]', //[폴더명][파일명][ext]
+            name: (resourcePath, resourceQuery) => {
+              // assets 폴더 내의 이미지는 imgs/ 폴더로 빌드
+              if (resourcePath.includes('assets')) {
+                return 'imgs/[name].[ext]';
+              }
+              // image 폴더 내의 이미지는 hello/ 폴더로 빌드
+              if (resourcePath.includes('image')) {
+                return 'hello/[name].[ext]';
+              }
+              // 그 외의 경우는 그대로 빌드
+              return '[name].[ext]';
+            },
           },
         },
       ],
